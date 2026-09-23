@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entrevista de Reclutamiento - Seguridad Privada</title>
+    <!-- Tailwind CSS para el diseño -->
+    <script src="https://jsdelivr.net"></script>
+    <!-- Librería html2pdf para la conversión exacta a PDF -->
+    <script src="https://cloudflare.com"></script>
+    <style>
+        .form-section {
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 1.5rem;
+        }
+        .pdf-page { box-sizing: border-box; }
+        @media print {
+            .no-print { display: none !important; }
+        }
+        /* Ocultar el input original de archivo pero mantenerlo funcional */
+        .file-upload-input {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0; cursor: pointer;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased">
+
+    <div class="max-w-4xl mx-auto p-4 md:p-8">
+        
+        <!-- Contenedor que será capturado para el PDF -->
+        <div id="contenidoContrato" class="pdf-page bg-white p-2 sm:p-6 rounded-lg shadow-sm md:shadow-none">
+            
+            <!-- Encabezado del Reporte -->
+            <header class="mb-8 border-b-2 border-blue-900 pb-4 flex justify-between items-center">
+                <div>
+                    <h1 class="text-2xl font-bold text-slate-950 uppercase tracking-wide">Cédula de Entrevista Laboral</h1>
+                    <p class="text-blue-900 font-semibold tracking-wider text-sm">RECLUTAMIENTO - SEGURIDAD PRIVADA OPERATIVA</p>
+                </div>
+                <div class="text-right text-xs text-slate-400">
+                    <p id="fechaActual"></p>
+                </div>
+            </header>
+
+            <form id="entrevistaForm" class="space-y-6">
+
+                <!-- 1. DATOS GENERALES Y FOTOGRAFÍA -->
+                <fieldset class="form-section border-l-4 border-blue-800">
+                    <legend class="text-lg font-bold text-blue-900 mb-3 px-2 uppercase tracking-wide">1. Datos Generales del Aspirante</legend>
+                    
+                    <!-- Layout flexible para acomodar los datos al lado de la fotografía -->
+                    <div class="flex flex-col-reverse md:flex-row gap-6">
+                        
+                        <!-- Bloque de inputs -->
+                        <div class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="sm:col-span-2">
+                                <label class="block text-xs font-semibold uppercase text-slate-500 mb-1">Nombre Completo</label>
+                                <input type="text" name="nombre" class="w-full border-b border-slate-300 p-2 focus:outline-none focus:border-blue-600 font-medium" required>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold uppercase text-slate-500 mb-1">Edad</label>
+                                <input type="number" name="edad" class="w-full border-b border-slate-300 p-2 focus:outline-none focus:border-blue-600" required>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold uppercase text-slate-500 mb-1">Teléfono de Contacto</label>
+                                <input type="tel" name="telefono" class="w-full border-b border-slate-300 p-2 focus:outline-none focus:border-blue-600" required>
+                            </div>
+                            <div class="sm:col-span-2">
+                                <label class="block text-xs font-semibold uppercase text-slate-500 mb-1">Correo Electrónico</label>
+                                <input type="email" name="correo" class="w-full border-b border-slate-300 p-2 focus:outline-none focus:border-blue-600">
+                            </div>
+                        </div>
+
+                        <!-- Bloque de carga de Fotografía -->
+                        <div class="flex flex-col items-center justify-center">
+                            <div class="relative w-36 h-44 border-2 border-dashed border-slate-300 rounded-md bg-slate-50 flex flex-col items-center justify-center overflow-hidden transition hover:bg-slate-100" id="contenedorFoto">
+                                <!-- Texto temporal e instrucción -->
+                                <div id="instruccionFoto" class="text-center p-2 pointer-events-none">
+                                    <span class="text-2xl text-slate-400 block mb-1">📷</span>
+                                    <span class="text-[10px] font-medium text-slate-500 uppercase tracking-tight block">Cargar Foto</span>
+                                    <span class="text-[9px] text-slate-400 block mt-0.5">(Haz clic aquí)</span>
+                                </div>
+                                <!-- Previsualización de la imagen cargada -->
+                                <img id="vistaPreviaFoto" class="hidden w-full h-full object-cover" alt="Fotografía del Guardia">
+                                <!-- Input oculto pero accesible -->
+                                <input type="file" id="inputFoto" accept="image/*" class="file-upload-input no-print">
+                            </div>
+                            <!-- Botón pequeño para borrar o cambiar foto en pantalla, oculto en el PDF -->
+                            <button type="button" id="btnQuitarFoto" onclick="removerFoto()" class="hidden no-print mt-1.5 text-[11px] text-red-600 font-semibold hover:underline cursor-pointer">
+                                Cambiar foto
+                            </button>
+                        </div>
+
+                    </div>
+                </fieldset>
+
+                <!-- 2. UBICACIÓN Y TRASLADO -->
+                <fieldset class="form-section border-l-4 border-blue-800">
+                    <legend class="text-lg font-bold text-blue-900 mb-3 px-2 uppercase tracking-wide">2. Ubicación y Tiempos de Traslado</legend>
+                    <div class="grid grid-cols-1 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-slate-500 mb-1">Dirección Completa de Residencia</label>
+                            <input type="text" name="direccion" class="w-full border-b border-slate-300 p-2 focus:outline-none focus:border-blue-600" required>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold uppercase text-slate-500 mb-1">Tiempo Estimado al Servicio Asignado</label>
+                                <input type="text" name="tiempo_traslado" placeholder="Ej. 45 min, 1 hora y media" class="w-full border-b border-slate-300 p-2 focus:outline-none focus:border-blue-600" required>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold uppercase text-slate-500 mb-1">Medio de Transporte Habitual</label>
+                                <input type="text" name="medio_transporte" placeholder="Ej. Transporte público, moto, auto" class="w-full border-b border-slate-300 p-2 focus:outline-none focus:border-blue-600">
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+                <!-- 3. EXPERIENCIA LABORAL -->
+                <fieldset class="form-section border-l-4 border-blue-800">
+                    <legend class="text-lg font-bold text-blue-900 mb-3 px-2 uppercase tracking-wide">3. Experiencia e Historial Laboral</legend>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-slate-500 mb-1">¿Tiene experiencia en Seguridad Privada o corporaciones públicas?</label>
+                            <select name="tiene_experiencia" class="w-full border-b border-slate-300 p-2 focus:outline-none focus:border-blue-600 bg-transparent">
+                                <option value="Sí">Sí, cuenta con experiencia previa</option>
+                                <option value="No">No, sin experiencia previa</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-slate-500 mb-1">Último Empleo (Empresa, puesto desempeñado, tiempo y motivo de separación)</label>
+                            <textarea name="ultimo_empleo" rows="2" class="w-full border border-slate-200 rounded p-2 focus:outline-none focus:border-blue-600" placeholder="Detallar referencias de sus bajas anteriores..."></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-slate-500 mb-1">¿Ha operado armamento o equipo táctico / radiofrecuencia?</label>
+                            <input type="text" name="manejo_equipo" placeholder="Ej. Fornitura, PR-24, radios comerciales, armamento cal. 38" class="w-full border-b border-slate-300 p-2 focus:outline-none focus:border-blue-600">
+                        </div>
+                    </div>
+                </fieldset>
+
+                <!-- 4. ESTADO DE SALUD -->
+                <fieldset class="form-section border-l-4 border-blue-800">
+                    <legend class="text-lg font-bold text-blue-900 mb-3 px-2 uppercase tracking-wide">4. Información Médica y de Salud</legend>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-slate-500 mb-1">¿Padece alguna condición o enfermedad crónica?</label>
+                            <input type="text" name="enfermedades" placeholder="Diabetes, hipertensión, alergias, ninguna" class="w-full border-b border-slate-300 p-2 focus:outline-none focus:border-blue-600" required>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-slate-500 mb-1">¿Requiere o toma algún medicamento de control?</label>
+                            <input type="text" name="medicamentos" class="w-full border-b border-slate-300 p-2 focus:outline-none focus:border-blue-600">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-xs font-semibold uppercase text-slate-500 mb-1">¿Tiene restricciones operativas (Inconvenientes para estar de pie o cubrir turnos 12x12 / 24x24)?</label>
+                            <input type="text" name="restricciones_turnos" placeholder="Ej. Sin restricciones, óptima salud física" class="w-full border-b border-slate-300 p-2 focus:outline-none focus:border-blue-600">
+                        </div>
+                    </div>
+                </fieldset>
+
+                <!-- 5. ENTORNO FAMILIAR -->
+                <fieldset class="form-section border-l-4 border-blue-800">
+                    <legend class="text-lg font-bold text-blue-900 mb-3 px-2 uppercase tracking-wide">5. Dinámica y Vida Familiar</legend>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-slate-500 mb-1">Estado Civil</label>
+                            <select name="estado_civil" class="w-full border-b border-slate-300 p-2 focus:outline-none focus:border-blue-600 bg-transparent">
+                                <option value="Soltero(a)">Soltero(a)</option>
+                                <option value="Casado(a)">Casado(a)</option>
+                                <option value="Unión Libre">Unión Libre</option>
+                                <option value="Divorciado(a)">Divorciado(a)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-slate-500 mb-1">Número de dependientes económicos directos</label>
+                            <input type="number" name="dependientes" min="0" value="0" class="w-full border-b border-slate-300 p-2 focus:outline-none focus:border-blue-600">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-xs font-semibold uppercase text-slate-500 mb-1">¿Con quién reside actualmente en su domicilio?</label>
+                            <input type="text" name="con_quien_vive" placeholder="Ej. Familia nuclear, padres, renta independiente" class="w-full border-b border-slate-300 p-2 focus:outline-none focus:border-blue-600">
+                        </div>
+                    </div>
+                </fieldset>
+
+                <!-- 6. FILTROS DE CONFIANZA Y LEGALES -->
+                <fieldset class="form-section border-l-4 border-blue-800">
+                    <legend class="text-lg font-bold text-blue-900 mb-3 px-2 uppercase tracking-wide">6. Filtros de Seguridad y Situación Legal</legend>
+                    <div class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold uppercase text-slate-500 mb-1">Frecuencia de consumo de tabaco o alcohol</label>
+                                <input type="text" name="consumo_sustancias" placeholder="Ej. No consume, Negativo a tabaco" class="w-full border-b border-slate-300 p-2 focus:outline-none focus:border-blue-600">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold uppercase text-slate-500 mb-1">¿Acepta someterse a exámenes de Toxicología (Antidoping)?</label>
+                                <select name="antidoping" class="w-full border-b border-slate-300 p-2 focus:outline-none focus:border-blue-600 bg-transparent">
+                                    <option value="Sí acepta">Sí, sin inconveniente alguno</option>
+                                    <option value="No acepta">No acepta la aplicación de la prueba</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-slate-500 mb-1">¿Registra antecedentes penales, arrestos o problemas vigentes con la ley?</label>
+                            <textarea name="problemas_legales" rows="2" class="w-full border border-slate-200 rounded p-2 focus:outline-none focus:border-blue-600" placeholder="Especificar historial detallado o registrar 'Ninguno'"></textarea>
+                        </div>
+                    </div>
+                </fieldset>
+                <!-- 7. ALMACÉN Y TALLAS DE UNIFORME -->
+                <fieldset class="form-section border-l-4 border-blue-800">
+                    <legend class="text-lg font-bold text-blue-900 mb-3 px-2 uppercase tracking-wide">7. Tallas para Asignación de Uniforme</legend>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-slate-500 mb-1">Camisola / Camisa</label>
+                            <input type="text" name="talla_camisa" placeholder="Ej. CH, M, G, XG" class="w-full border-b border-slate-300 p-2 focus:outline-none focus:border-blue-600" required>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-slate-500 mb-1">Pantalón (Talla)</label>
+                            <input type="text" name="talla_pantalon" placeholder="Ej. 30, 32, 34, 36" class="w-full border-b border-slate-300 p-2 focus:outline-none focus:border-blue-600" required>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-slate-500 mb-1">Botas / Calzado</label>
+                            <input type="text" name="talla_calzado" placeholder="Ej. 26.5, 27" class="w-full border-b border-slate-300 p-2 focus:outline-none focus:border-blue-600" required>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-slate-500 mb-1">Gorra / Fornitura</label>
+                            <input type="text" name="talla_accesorios" placeholder="Ej. Unitalla / M" class="w-full border-b border-slate-300 p-2 focus:outline-none focus:border-blue-600">
+                        </div>
+                    </div>
+                </fieldset>
+
+                <!-- 8. VALORACIÓN DEL RECLUTADOR -->
+                <fieldset class="form-section border-l-4 border-blue-800">
+                    <legend class="text-lg font-bold text-blue-900 mb-3 px-2 uppercase tracking-wide">8. Conclusiones y Notas del Reclutador</legend>
+                    <div>
+                        <textarea name="observaciones" rows="3" class="w-full border border-slate-200 rounded p-2 focus:outline-none focus:border-blue-600" placeholder="Puntualidad, presentación, lenguaje no verbal, perfil apto para el servicio..."></textarea>
+                    </div>
+                </fieldset>
+
+                <!-- Firmas para validación en PDF -->
+                <div class="grid grid-cols-2 gap-8 pt-8 text-center text-xs font-bold uppercase tracking-wide">
+                    <div class="border-t border-slate-400 pt-2 text-slate-600">Firma del Candidato</div>
+                    <div class="border-t border-slate-400 pt-2 text-slate-600">Firma del Reclutador / Evaluador</div>
+                </div>
+
+            </form>
+        </div>
+
+        <!-- PANEL DE BOTONES (NO SE IMPRIME NI SALE EN EL PDF) -->
+        <div class="no-print mt-6 flex flex-col sm:flex-row gap-4 justify-end">
+            <button type="button" onclick="limpiarFormulario()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-3 px-6 rounded-lg transition text-sm cursor-pointer">
+                Vaciar Campos
+            </button>
+            <button type="button" onclick="generarPDF()" class="bg-blue-800 hover:bg-blue-900 text-white font-bold py-3 px-6 rounded-lg transition shadow-md flex items-center justify-center gap-2 text-sm cursor-pointer">
+                Descargar Documento PDF
+            </button>
+        </div>
+
+    </div>
+
+    <!-- LÓGICA AUTOMATIZADA -->
+    <script>
+        // Insertar fecha automática al abrir el archivo
+        document.getElementById('fechaActual').innerText = `Fecha de evaluación: ${new Date().toLocaleDateString('es-MX', {day: 'numeric', month: 'long', year: 'numeric'})}`;
+
+        // Lógica para procesar y previsualizar la fotografía del aspirante
+        const inputFoto = document.getElementById('inputFoto');
+        const vistaPreviaFoto = document.getElementById('vistaPreviaFoto');
+        const instruccionFoto = document.getElementById('instruccionFoto');
+        const btnQuitarFoto = document.getElementById('btnQuitarFoto');
+        const contenedorFoto = document.getElementById('contenedorFoto');
+
+        inputFoto.addEventListener('change', function(e) {
+            const archivo = e.target.files[0];
+            if (archivo) {
+                const lector = new FileReader();
+                lector.onload = function(evento) {
+                    vistaPreviaFoto.src = evento.target.result;
+                    vistaPreviaFoto.classList.remove('hidden');
+                    instruccionFoto.classList.add('hidden');
+                    btnQuitarFoto.classList.remove('hidden');
+                    contenedorFoto.classList.remove('border-dashed');
+                }
+                lector.readAsDataURL(archivo);
+            }
+        });
+
+        function removerFoto() {
+            inputFoto.value = "";
+            vistaPreviaFoto.src = "";
+            vistaPreviaFoto.classList.add('hidden');
+            instruccionFoto.classList.remove('hidden');
+            btnQuitarFoto.classList.add('hidden');
+            contenedorFoto.classList.add('border-dashed');
+        }
+
+        // Lógica de generación de PDF institucional
+        function generarPDF() {
+            const form = document.getElementById('entrevistaForm');
+            
+            // Validar campos obligatorios antes de exportar
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            const nombreCandidato = form.elements['nombre'].value.trim().replace(/\s+/g, '_') || 'Nuevo_Ingreso';
+            const elementoContenido = document.getElementById('contenidoContrato');
+
+            const opciones = {
+                margin:       10, 
+                filename:     `Entrevista_Seguridad_${nombreCandidato}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true, logging: false },
+                jsPDF:        { unit: 'mm', format: 'letter', orientation: 'portrait' }
+            };
+
+            html2pdf().set(opciones).from(elementoContenido).save();
+        }
+
+        function limpiarFormulario() {
+            if (confirm('¿Deseas restablecer y borrar todo el contenido actual, incluyendo la fotografía?')) {
+                document.getElementById('entrevistaForm').reset();
+                removerFoto();
+            }
+        }
+    </script>
+</body>
+</html>
