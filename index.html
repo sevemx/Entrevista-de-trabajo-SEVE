@@ -1,0 +1,1734 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+    <meta name="theme-color" content="#111827">
+
+    <title>Entrevista de Reclutamiento - Seguridad Privada</title>
+
+    <!-- Tailwind solamente para la apariencia del formulario -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- jsPDF: generación DIRECTA del PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <style>
+        body {
+            background: #f3f4f6;
+        }
+
+        input,
+        select,
+        textarea {
+            font-size: 16px !important;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        .seccion {
+            scroll-margin-top: 20px;
+        }
+
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+
+<body class="min-h-screen">
+
+<div class="max-w-4xl mx-auto px-4 py-6">
+
+    <!-- ENCABEZADO -->
+    <div class="bg-gray-900 text-white rounded-xl shadow-lg p-6 mb-6">
+        <h1 class="text-2xl md:text-3xl font-bold">
+            Entrevista de Reclutamiento
+        </h1>
+
+        <p class="text-gray-300 mt-1">
+            Seguridad Privada
+        </p>
+
+        <div class="mt-4 text-sm text-gray-300">
+            Fecha:
+            <span id="fechaActual" class="font-semibold text-white"></span>
+        </div>
+    </div>
+
+
+    <!-- FORMULARIO -->
+    <form id="formularioEntrevista">
+
+        <!-- FOTO -->
+        <div class="bg-white rounded-xl shadow p-5 mb-5">
+
+            <h2 class="text-lg font-bold text-gray-800 mb-4">
+                Fotografía del candidato
+            </h2>
+
+            <div class="flex flex-col items-center">
+
+                <div
+                    class="w-40 h-48 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center overflow-hidden bg-gray-50">
+
+                    <img
+                        id="vistaPreviaFoto"
+                        class="hidden w-full h-full object-cover"
+                        alt="Fotografía del candidato">
+
+                    <span
+                        id="textoFoto"
+                        class="text-gray-400 text-sm text-center px-3">
+                        Sin fotografía
+                    </span>
+
+                </div>
+
+                <input
+                    id="foto"
+                    type="file"
+                    accept="image/*"
+                    class="mt-4 block w-full max-w-sm text-sm">
+
+            </div>
+        </div>
+
+
+        <!-- 1. DATOS PERSONALES -->
+        <section class="seccion bg-white rounded-xl shadow p-5 mb-5">
+
+            <h2 class="text-xl font-bold text-gray-800 mb-5">
+                1. Datos personales
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                <div>
+                    <label class="block font-semibold mb-1">
+                        Nombre completo *
+                    </label>
+
+                    <input
+                        id="nombre"
+                        name="nombre"
+                        required
+                        type="text"
+                        class="w-full border rounded-lg px-3 py-2"
+                        placeholder="Nombre completo">
+                </div>
+
+
+                <div>
+                    <label class="block font-semibold mb-1">
+                        Edad *
+                    </label>
+
+                    <input
+                        id="edad"
+                        name="edad"
+                        required
+                        type="number"
+                        min="18"
+                        class="w-full border rounded-lg px-3 py-2"
+                        placeholder="Edad">
+                </div>
+
+
+                <div>
+                    <label class="block font-semibold mb-1">
+                        Teléfono *
+                    </label>
+
+                    <input
+                        id="telefono"
+                        name="telefono"
+                        required
+                        type="tel"
+                        class="w-full border rounded-lg px-3 py-2"
+                        placeholder="Teléfono">
+                </div>
+
+
+                <div>
+                    <label class="block font-semibold mb-1">
+                        Correo electrónico
+                    </label>
+
+                    <input
+                        id="correo"
+                        name="correo"
+                        type="email"
+                        class="w-full border rounded-lg px-3 py-2"
+                        placeholder="correo@ejemplo.com">
+                </div>
+
+
+                <div class="md:col-span-2">
+
+                    <label class="block font-semibold mb-1">
+                        Dirección *
+                    </label>
+
+                    <textarea
+                        id="direccion"
+                        name="direccion"
+                        required
+                        rows="2"
+                        class="w-full border rounded-lg px-3 py-2"
+                        placeholder="Domicilio completo"></textarea>
+
+                </div>
+
+
+                <div>
+                    <label class="block font-semibold mb-1">
+                        Tiempo de traslado *
+                    </label>
+
+                    <input
+                        id="tiempo_traslado"
+                        name="tiempo_traslado"
+                        required
+                        type="text"
+                        class="w-full border rounded-lg px-3 py-2"
+                        placeholder="Ej. 45 minutos">
+                </div>
+
+
+                <div>
+                    <label class="block font-semibold mb-1">
+                        Medio de transporte
+                    </label>
+
+                    <input
+                        id="medio_transporte"
+                        name="medio_transporte"
+                        type="text"
+                        class="w-full border rounded-lg px-3 py-2"
+                        placeholder="Camión, automóvil, motocicleta, etc.">
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- 2. EXPERIENCIA -->
+        <section class="seccion bg-white rounded-xl shadow p-5 mb-5">
+
+            <h2 class="text-xl font-bold text-gray-800 mb-5">
+                2. Experiencia laboral
+            </h2>
+
+            <div class="space-y-4">
+
+                <div>
+
+                    <label class="block font-semibold mb-1">
+                        ¿Tiene experiencia en seguridad privada?
+                    </label>
+
+                    <select
+                        id="tiene_experiencia"
+                        name="tiene_experiencia"
+                        class="w-full border rounded-lg px-3 py-2">
+
+                        <option value="">
+                            Seleccionar
+                        </option>
+
+                        <option value="Sí">
+                            Sí
+                        </option>
+
+                        <option value="No">
+                            No
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div>
+
+                    <label class="block font-semibold mb-1">
+                        Último empleo
+                    </label>
+
+                    <textarea
+                        id="ultimo_empleo"
+                        name="ultimo_empleo"
+                        rows="4"
+                        class="w-full border rounded-lg px-3 py-2"
+                        placeholder="Empresa, puesto, tiempo laborado y motivo de salida"></textarea>
+
+                </div>
+
+
+                <div>
+
+                    <label class="block font-semibold mb-1">
+                        Manejo de equipo
+                    </label>
+
+                    <textarea
+                        id="manejo_equipo"
+                        name="manejo_equipo"
+                        rows="3"
+                        class="w-full border rounded-lg px-3 py-2"
+                        placeholder="Equipo de seguridad, radio, computadora, CCTV, etc."></textarea>
+
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- 3. SALUD -->
+        <section class="seccion bg-white rounded-xl shadow p-5 mb-5">
+
+            <h2 class="text-xl font-bold text-gray-800 mb-5">
+                3. Salud y condiciones para el trabajo
+            </h2>
+
+            <div class="space-y-4">
+
+                <div>
+
+                    <label class="block font-semibold mb-1">
+                        ¿Tiene alguna enfermedad o condición que deba informar? *
+                    </label>
+
+                    <textarea
+                        id="enfermedades"
+                        name="enfermedades"
+                        required
+                        rows="3"
+                        class="w-full border rounded-lg px-3 py-2"></textarea>
+
+                </div>
+
+
+                <div>
+
+                    <label class="block font-semibold mb-1">
+                        ¿Toma medicamentos?
+                    </label>
+
+                    <textarea
+                        id="medicamentos"
+                        name="medicamentos"
+                        rows="3"
+                        class="w-full border rounded-lg px-3 py-2"></textarea>
+
+                </div>
+
+
+                <div>
+
+                    <label class="block font-semibold mb-1">
+                        Restricciones para trabajar turnos
+                    </label>
+
+                    <textarea
+                        id="restricciones_turnos"
+                        name="restricciones_turnos"
+                        rows="3"
+                        class="w-full border rounded-lg px-3 py-2"
+                        placeholder="Horario nocturno, fines de semana, turnos 12x12, 24x24, etc."></textarea>
+
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- 4. SITUACIÓN FAMILIAR -->
+        <section class="seccion bg-white rounded-xl shadow p-5 mb-5">
+
+            <h2 class="text-xl font-bold text-gray-800 mb-5">
+                4. Situación familiar
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                <div>
+
+                    <label class="block font-semibold mb-1">
+                        Estado civil
+                    </label>
+
+                    <input
+                        id="estado_civil"
+                        name="estado_civil"
+                        type="text"
+                        class="w-full border rounded-lg px-3 py-2">
+
+                </div>
+
+
+                <div>
+
+                    <label class="block font-semibold mb-1">
+                        Número de dependientes
+                    </label>
+
+                    <input
+                        id="dependientes"
+                        name="dependientes"
+                        type="number"
+                        min="0"
+                        class="w-full border rounded-lg px-3 py-2">
+
+                </div>
+
+
+                <div class="md:col-span-2">
+
+                    <label class="block font-semibold mb-1">
+                        ¿Con quién vive?
+                    </label>
+
+                    <input
+                        id="con_quien_vive"
+                        name="con_quien_vive"
+                        type="text"
+                        class="w-full border rounded-lg px-3 py-2">
+
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- 5. ANTECEDENTES -->
+        <section class="seccion bg-white rounded-xl shadow p-5 mb-5">
+
+            <h2 class="text-xl font-bold text-gray-800 mb-5">
+                5. Antecedentes
+            </h2>
+
+            <div class="space-y-4">
+
+                <div>
+
+                    <label class="block font-semibold mb-1">
+                        Consumo de sustancias
+                    </label>
+
+                    <textarea
+                        id="consumo_sustancias"
+                        name="consumo_sustancias"
+                        rows="3"
+                        class="w-full border rounded-lg px-3 py-2"></textarea>
+
+                </div>
+
+
+                <div>
+
+                    <label class="block font-semibold mb-1">
+                        ¿Acepta prueba antidoping?
+                    </label>
+
+                    <select
+                        id="antidoping"
+                        name="antidoping"
+                        class="w-full border rounded-lg px-3 py-2">
+
+                        <option value="">
+                            Seleccionar
+                        </option>
+
+                        <option value="Sí">
+                            Sí
+                        </option>
+
+                        <option value="No">
+                            No
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div>
+
+                    <label class="block font-semibold mb-1">
+                        ¿Tiene o ha tenido problemas legales?
+                    </label>
+
+                    <textarea
+                        id="problemas_legales"
+                        name="problemas_legales"
+                        rows="3"
+                        class="w-full border rounded-lg px-3 py-2"></textarea>
+
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- 6. TALLAS -->
+        <section class="seccion bg-white rounded-xl shadow p-5 mb-5">
+
+            <h2 class="text-xl font-bold text-gray-800 mb-5">
+                6. Tallas y equipo
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                <div>
+
+                    <label class="block font-semibold mb-1">
+                        Talla de camisa *
+                    </label>
+
+                    <input
+                        id="talla_camisa"
+                        name="talla_camisa"
+                        required
+                        type="text"
+                        class="w-full border rounded-lg px-3 py-2">
+
+                </div>
+
+
+                <div>
+
+                    <label class="block font-semibold mb-1">
+                        Talla de pantalón *
+                    </label>
+
+                    <input
+                        id="talla_pantalon"
+                        name="talla_pantalon"
+                        required
+                        type="text"
+                        class="w-full border rounded-lg px-3 py-2">
+
+                </div>
+
+
+                <div>
+
+                    <label class="block font-semibold mb-1">
+                        Talla de calzado *
+                    </label>
+
+                    <input
+                        id="talla_calzado"
+                        name="talla_calzado"
+                        required
+                        type="text"
+                        class="w-full border rounded-lg px-3 py-2">
+
+                </div>
+
+
+                <div>
+
+                    <label class="block font-semibold mb-1">
+                        Talla de accesorios
+                    </label>
+
+                    <input
+                        id="talla_accesorios"
+                        name="talla_accesorios"
+                        type="text"
+                        class="w-full border rounded-lg px-3 py-2">
+
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- 7. OBSERVACIONES -->
+        <section class="seccion bg-white rounded-xl shadow p-5 mb-5">
+
+            <h2 class="text-xl font-bold text-gray-800 mb-5">
+                7. Observaciones
+            </h2>
+
+            <textarea
+                id="observaciones"
+                name="observaciones"
+                rows="6"
+                class="w-full border rounded-lg px-3 py-2"
+                placeholder="Observaciones del entrevistador"></textarea>
+
+        </section>
+
+
+        <!-- 8. FIRMAS -->
+        <section class="seccion bg-white rounded-xl shadow p-5 mb-5">
+
+            <h2 class="text-xl font-bold text-gray-800 mb-5">
+                8. Resultado de entrevista
+            </h2>
+
+            <textarea
+                id="resultado"
+                name="resultado"
+                rows="5"
+                class="w-full border rounded-lg px-3 py-2"
+                placeholder="Resultado, comentarios o determinación de la entrevista"></textarea>
+
+        </section>
+
+
+        <!-- BOTONES -->
+        <div class="no-print flex flex-col md:flex-row gap-3 pb-10">
+
+            <button
+                type="button"
+                id="btnPDF"
+                class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-4 px-5 rounded-xl shadow">
+
+                Descargar Documento PDF
+
+            </button>
+
+
+            <button
+                type="button"
+                id="btnLimpiar"
+                class="md:w-48 bg-gray-600 hover:bg-gray-700 text-white font-bold py-4 px-5 rounded-xl shadow">
+
+                Vaciar Campos
+
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   FECHA ACTUAL
+========================================================= */
+
+function obtenerFechaActual() {
+
+    const fecha = new Date();
+
+    return fecha.toLocaleDateString("es-MX", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric"
+    });
+}
+
+document.getElementById("fechaActual").textContent =
+    obtenerFechaActual();
+
+
+/* =========================================================
+   FOTOGRAFÍA
+========================================================= */
+
+let fotoDataURL = null;
+
+const inputFoto = document.getElementById("foto");
+const vistaPreviaFoto = document.getElementById("vistaPreviaFoto");
+const textoFoto = document.getElementById("textoFoto");
+
+inputFoto.addEventListener("change", function () {
+
+    const archivo = this.files[0];
+
+    if (!archivo) {
+        fotoDataURL = null;
+        vistaPreviaFoto.classList.add("hidden");
+        textoFoto.classList.remove("hidden");
+        return;
+    }
+
+    const lector = new FileReader();
+
+    lector.onload = function (evento) {
+
+        fotoDataURL = evento.target.result;
+
+        vistaPreviaFoto.src = fotoDataURL;
+
+        vistaPreviaFoto.classList.remove("hidden");
+        textoFoto.classList.add("hidden");
+    };
+
+    lector.readAsDataURL(archivo);
+});
+
+
+/* =========================================================
+   OBTENER VALOR DE UN CAMPO
+========================================================= */
+
+function valor(id) {
+
+    const elemento = document.getElementById(id);
+
+    if (!elemento) {
+        return "";
+    }
+
+    return elemento.value.trim();
+}
+
+
+/* =========================================================
+   CONVERTIR FOTO A JPEG
+   Esto evita problemas con PNG/WEBP en jsPDF
+========================================================= */
+
+function convertirImagenAJPEG(dataURL) {
+
+    return new Promise((resolve, reject) => {
+
+        const imagen = new Image();
+
+        imagen.onload = function () {
+
+            const canvas = document.createElement("canvas");
+
+            const MAX_WIDTH = 900;
+            const MAX_HEIGHT = 1100;
+
+            let ancho = imagen.width;
+            let alto = imagen.height;
+
+            const proporcion = Math.min(
+                MAX_WIDTH / ancho,
+                MAX_HEIGHT / alto,
+                1
+            );
+
+            ancho = Math.round(ancho * proporcion);
+            alto = Math.round(alto * proporcion);
+
+            canvas.width = ancho;
+            canvas.height = alto;
+
+            const ctx = canvas.getContext("2d");
+
+            ctx.drawImage(
+                imagen,
+                0,
+                0,
+                ancho,
+                alto
+            );
+
+            resolve(
+                canvas.toDataURL(
+                    "image/jpeg",
+                    0.85
+                )
+            );
+        };
+
+        imagen.onerror = reject;
+
+        imagen.src = dataURL;
+    });
+}
+
+
+/* =========================================================
+   FUNCIONES PDF
+========================================================= */
+
+function configurarFuente(doc, negrita = false, tamaño = 10) {
+
+    doc.setFont(
+        "helvetica",
+        negrita ? "bold" : "normal"
+    );
+
+    doc.setFontSize(tamaño);
+}
+
+
+/* ---------------------------------------------------------
+   ENCABEZADO
+--------------------------------------------------------- */
+
+function agregarEncabezado(doc, numeroPagina) {
+
+    const anchoPagina = 216;
+
+    doc.setFillColor(17, 24, 39);
+
+    doc.rect(
+        0,
+        0,
+        anchoPagina,
+        25,
+        "F"
+    );
+
+    doc.setTextColor(255, 255, 255);
+
+    configurarFuente(
+        doc,
+        true,
+        16
+    );
+
+    doc.text(
+        "ENTREVISTA DE RECLUTAMIENTO",
+        15,
+        11
+    );
+
+    configurarFuente(
+        doc,
+        false,
+        9
+    );
+
+    doc.text(
+        "SEGURIDAD PRIVADA",
+        15,
+        18
+    );
+
+    doc.text(
+        "Página " + numeroPagina,
+        201,
+        17,
+        {
+            align: "right"
+        }
+    );
+
+    doc.setTextColor(0, 0, 0);
+}
+
+
+/* ---------------------------------------------------------
+   TÍTULO DE SECCIÓN
+--------------------------------------------------------- */
+
+function agregarTituloSeccion(
+    doc,
+    titulo,
+    y
+) {
+
+    doc.setFillColor(229, 231, 235);
+
+    doc.rect(
+        15,
+        y,
+        186,
+        8,
+        "F"
+    );
+
+    configurarFuente(
+        doc,
+        true,
+        10
+    );
+
+    doc.setTextColor(31, 41, 55);
+
+    doc.text(
+        titulo,
+        18,
+        y + 5.5
+    );
+
+    doc.setTextColor(0, 0, 0);
+
+    return y + 13;
+}
+
+
+/* ---------------------------------------------------------
+   CAMPO SIMPLE
+--------------------------------------------------------- */
+
+function agregarCampo(
+    doc,
+    etiqueta,
+    contenido,
+    x,
+    y,
+    ancho,
+    opciones = {}
+) {
+
+    const alturaLinea =
+        opciones.alturaLinea || 5;
+
+    const tamaño =
+        opciones.tamaño || 9;
+
+    const maxLineas =
+        opciones.maxLineas || 5;
+
+    configurarFuente(
+        doc,
+        true,
+        tamaño
+    );
+
+    doc.setTextColor(55, 65, 81);
+
+    doc.text(
+        etiqueta,
+        x,
+        y
+    );
+
+    configurarFuente(
+        doc,
+        false,
+        tamaño
+    );
+
+    doc.setTextColor(0, 0, 0);
+
+    let texto =
+        contenido && contenido.trim()
+            ? contenido.trim()
+            : "No especificado";
+
+    let lineas =
+        doc.splitTextToSize(
+            texto,
+            ancho
+        );
+
+    if (lineas.length > maxLineas) {
+
+        lineas =
+            lineas.slice(0, maxLineas);
+
+        lineas[maxLineas - 1] += "...";
+    }
+
+    doc.text(
+        lineas,
+        x,
+        y + alturaLinea
+    );
+
+    return y +
+        alturaLinea +
+        (lineas.length * alturaLinea) +
+        2;
+}
+
+
+/* ---------------------------------------------------------
+   CAMPO EN DOS COLUMNAS
+--------------------------------------------------------- */
+
+function agregarCampoDosColumnas(
+    doc,
+    etiqueta,
+    contenido,
+    x,
+    y,
+    ancho
+) {
+
+    configurarFuente(
+        doc,
+        true,
+        8.5
+    );
+
+    doc.setTextColor(75, 85, 99);
+
+    doc.text(
+        etiqueta,
+        x,
+        y
+    );
+
+    configurarFuente(
+        doc,
+        false,
+        9
+    );
+
+    doc.setTextColor(0, 0, 0);
+
+    const texto =
+        contenido && contenido.trim()
+            ? contenido.trim()
+            : "No especificado";
+
+    const lineas =
+        doc.splitTextToSize(
+            texto,
+            ancho
+        );
+
+    doc.text(
+        lineas.slice(0, 3),
+        x,
+        y + 4.5
+    );
+
+    return y + 4.5 +
+        (Math.min(lineas.length, 3) * 4.5) +
+        2;
+}
+
+
+/* =========================================================
+   GENERAR PDF
+========================================================= */
+
+async function generarPDF() {
+
+    /* ---------------------------------------------
+       VALIDAR FORMULARIO
+    --------------------------------------------- */
+
+    const formulario =
+        document.getElementById(
+            "formularioEntrevista"
+        );
+
+    if (!formulario.checkValidity()) {
+
+        formulario.reportValidity();
+
+        return;
+    }
+
+
+    /* ---------------------------------------------
+       VERIFICAR jsPDF
+    --------------------------------------------- */
+
+    if (
+        typeof window.jspdf === "undefined" ||
+        typeof window.jspdf.jsPDF === "undefined"
+    ) {
+
+        alert(
+            "No se pudo cargar el generador PDF. " +
+            "Verifica tu conexión a Internet."
+        );
+
+        return;
+    }
+
+
+    /* ---------------------------------------------
+       CREAR DOCUMENTO
+    --------------------------------------------- */
+
+    const {
+        jsPDF
+    } = window.jspdf;
+
+    const doc =
+        new jsPDF({
+            orientation: "portrait",
+            unit: "mm",
+            format: "letter",
+            compress: true
+        });
+
+
+    /* ---------------------------------------------
+       CONFIGURACIÓN
+    --------------------------------------------- */
+
+    const margenIzquierdo = 15;
+    const anchoContenido = 186;
+
+    let y = 32;
+
+
+    /* =================================================
+       PÁGINA 1
+    ================================================= */
+
+    agregarEncabezado(
+        doc,
+        1
+    );
+
+
+    /* DATOS PERSONALES */
+
+    y = agregarTituloSeccion(
+        doc,
+        "1. DATOS PERSONALES",
+        y
+    );
+
+
+    /* FOTO */
+
+    if (fotoDataURL) {
+
+        try {
+
+            const fotoJPEG =
+                await convertirImagenAJPEG(
+                    fotoDataURL
+                );
+
+            doc.addImage(
+                fotoJPEG,
+                "JPEG",
+                156,
+                38,
+                45,
+                55
+            );
+
+        } catch (error) {
+
+            console.warn(
+                "No se pudo agregar la fotografía:",
+                error
+            );
+        }
+    }
+
+    const anchoDatos =
+        fotoDataURL
+            ? 132
+            : 186;
+
+
+    y = agregarCampo(
+        doc,
+        "Nombre completo:",
+        valor("nombre"),
+        margenIzquierdo,
+        y,
+        anchoDatos,
+        {
+            maxLineas: 2
+        }
+    );
+
+
+    y = agregarCampoDosColumnas(
+        doc,
+        "Edad:",
+        valor("edad"),
+        margenIzquierdo,
+        y,
+        40
+    );
+
+
+    y = agregarCampoDosColumnas(
+        doc,
+        "Teléfono:",
+        valor("telefono"),
+        70,
+        y - 9,
+        50
+    );
+
+
+    y = agregarCampoDosColumnas(
+        doc,
+        "Correo:",
+        valor("correo"),
+        130,
+        y - 9,
+        65
+    );
+
+
+    y += 3;
+
+
+    y = agregarCampo(
+        doc,
+        "Dirección:",
+        valor("direccion"),
+        margenIzquierdo,
+        y,
+        anchoDatos,
+        {
+            maxLineas: 3
+        }
+    );
+
+
+    y = agregarCampoDosColumnas(
+        doc,
+        "Tiempo de traslado:",
+        valor("tiempo_traslado"),
+        margenIzquierdo,
+        y,
+        75
+    );
+
+
+    y = agregarCampoDosColumnas(
+        doc,
+        "Medio de transporte:",
+        valor("medio_transporte"),
+        110,
+        y - 9,
+        85
+    );
+
+
+    y += 5;
+
+
+    /* EXPERIENCIA */
+
+    y = agregarTituloSeccion(
+        doc,
+        "2. EXPERIENCIA LABORAL",
+        y
+    );
+
+
+    y = agregarCampoDosColumnas(
+        doc,
+        "Experiencia en seguridad:",
+        valor("tiene_experiencia"),
+        margenIzquierdo,
+        y,
+        80
+    );
+
+
+    y = agregarCampo(
+        doc,
+        "Último empleo:",
+        valor("ultimo_empleo"),
+        margenIzquierdo,
+        y + 2,
+        anchoContenido,
+        {
+            maxLineas: 4
+        }
+    );
+
+
+    y = agregarCampo(
+        doc,
+        "Manejo de equipo:",
+        valor("manejo_equipo"),
+        margenIzquierdo,
+        y,
+        anchoContenido,
+        {
+            maxLineas: 3
+        }
+    );
+
+
+    /* SALUD */
+
+    y = agregarTituloSeccion(
+        doc,
+        "3. SALUD Y CONDICIONES PARA EL TRABAJO",
+        y + 3
+    );
+
+
+    y = agregarCampo(
+        doc,
+        "Enfermedades o condiciones:",
+        valor("enfermedades"),
+        margenIzquierdo,
+        y,
+        anchoContenido,
+        {
+            maxLineas: 3
+        }
+    );
+
+
+    y = agregarCampo(
+        doc,
+        "Medicamentos:",
+        valor("medicamentos"),
+        margenIzquierdo,
+        y,
+        anchoContenido,
+        {
+            maxLineas: 3
+        }
+    );
+
+
+    y = agregarCampo(
+        doc,
+        "Restricciones para turnos:",
+        valor("restricciones_turnos"),
+        margenIzquierdo,
+        y,
+        anchoContenido,
+        {
+            maxLineas: 3
+        }
+    );
+
+
+    /* =================================================
+       PÁGINA 2
+    ================================================= */
+
+    doc.addPage();
+
+    y = 32;
+
+    agregarEncabezado(
+        doc,
+        2
+    );
+
+
+    /* SITUACIÓN FAMILIAR */
+
+    y = agregarTituloSeccion(
+        doc,
+        "4. SITUACIÓN FAMILIAR",
+        y
+    );
+
+
+    y = agregarCampoDosColumnas(
+        doc,
+        "Estado civil:",
+        valor("estado_civil"),
+        margenIzquierdo,
+        y,
+        75
+    );
+
+
+    y = agregarCampoDosColumnas(
+        doc,
+        "Dependientes:",
+        valor("dependientes"),
+        110,
+        y - 9,
+        80
+    );
+
+
+    y = agregarCampo(
+        doc,
+        "¿Con quién vive?:",
+        valor("con_quien_vive"),
+        margenIzquierdo,
+        y + 2,
+        anchoContenido,
+        {
+            maxLineas: 2
+        }
+    );
+
+
+    /* ANTECEDENTES */
+
+    y = agregarTituloSeccion(
+        doc,
+        "5. ANTECEDENTES",
+        y + 3
+    );
+
+
+    y = agregarCampo(
+        doc,
+        "Consumo de sustancias:",
+        valor("consumo_sustancias"),
+        margenIzquierdo,
+        y,
+        anchoContenido,
+        {
+            maxLineas: 3
+        }
+    );
+
+
+    y = agregarCampoDosColumnas(
+        doc,
+        "Acepta prueba antidoping:",
+        valor("antidoping"),
+        margenIzquierdo,
+        y,
+        85
+    );
+
+
+    y = agregarCampo(
+        doc,
+        "Problemas legales:",
+        valor("problemas_legales"),
+        margenIzquierdo,
+        y + 2,
+        anchoContenido,
+        {
+            maxLineas: 3
+        }
+    );
+
+
+    /* TALLAS */
+
+    y = agregarTituloSeccion(
+        doc,
+        "6. TALLAS Y EQUIPO",
+        y + 3
+    );
+
+
+    let yTallas = y;
+
+
+    yTallas = agregarCampoDosColumnas(
+        doc,
+        "Camisa:",
+        valor("talla_camisa"),
+        margenIzquierdo,
+        yTallas,
+        70
+    );
+
+
+    yTallas = agregarCampoDosColumnas(
+        doc,
+        "Pantalón:",
+        valor("talla_pantalon"),
+        75,
+        y - 9,
+        60
+    );
+
+
+    yTallas = agregarCampoDosColumnas(
+        doc,
+        "Calzado:",
+        valor("talla_calzado"),
+        140,
+        y - 9,
+        55
+    );
+
+
+    y = Math.max(
+        yTallas,
+        y + 14
+    );
+
+
+    y = agregarCampoDosColumnas(
+        doc,
+        "Accesorios:",
+        valor("talla_accesorios"),
+        margenIzquierdo,
+        y,
+        80
+    );
+
+
+    /* OBSERVACIONES */
+
+    y = agregarTituloSeccion(
+        doc,
+        "7. OBSERVACIONES",
+        y + 5
+    );
+
+
+    y = agregarCampo(
+        doc,
+        "Observaciones del entrevistador:",
+        valor("observaciones"),
+        margenIzquierdo,
+        y,
+        anchoContenido,
+        {
+            maxLineas: 7
+        }
+    );
+
+
+    /* RESULTADO */
+
+    y = agregarTituloSeccion(
+        doc,
+        "8. RESULTADO DE ENTREVISTA",
+        y + 5
+    );
+
+
+    y = agregarCampo(
+        doc,
+        "Resultado / comentarios:",
+        valor("resultado"),
+        margenIzquierdo,
+        y,
+        anchoContenido,
+        {
+            maxLineas: 6
+        }
+    );
+
+
+    /* =================================================
+       FIRMAS
+    ================================================= */
+
+    const yFirma =
+        Math.min(
+            Math.max(y + 10, 230),
+            245
+        );
+
+
+    doc.setDrawColor(
+        100,
+        100,
+        100
+    );
+
+
+    doc.line(
+        25,
+        yFirma,
+        90,
+        yFirma
+    );
+
+
+    doc.line(
+        125,
+        yFirma,
+        190,
+        yFirma
+    );
+
+
+    configurarFuente(
+        doc,
+        false,
+        8
+    );
+
+
+    doc.text(
+        "Firma del entrevistador",
+        57.5,
+        yFirma + 5,
+        {
+            align: "center"
+        }
+    );
+
+
+    doc.text(
+        "Firma del candidato",
+        157.5,
+        yFirma + 5,
+        {
+            align: "center"
+        }
+    );
+
+
+    /* =================================================
+       PIE DE PÁGINA
+    ================================================= */
+
+    doc.setDrawColor(
+        180,
+        180,
+        180
+    );
+
+    doc.line(
+        15,
+        268,
+        201,
+        268
+    );
+
+
+    configurarFuente(
+        doc,
+        false,
+        7
+    );
+
+
+    doc.setTextColor(
+        100,
+        100,
+        100
+    );
+
+
+    doc.text(
+        "Documento generado mediante el sistema de entrevista de reclutamiento.",
+        15,
+        273
+    );
+
+
+    doc.text(
+        obtenerFechaActual(),
+        201,
+        273,
+        {
+            align: "right"
+        }
+    );
+
+
+    /* =================================================
+       NOMBRE DEL ARCHIVO
+    ================================================= */
+
+    let nombreArchivo =
+        valor("nombre")
+            .replace(
+                /[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑ ]/g,
+                ""
+            )
+            .trim()
+            .replace(
+                /\s+/g,
+                "_"
+            );
+
+
+    if (!nombreArchivo) {
+        nombreArchivo = "Candidato";
+    }
+
+
+    const nombrePDF =
+        "Entrevista_Seguridad_" +
+        nombreArchivo +
+        ".pdf";
+
+
+    /* =================================================
+       DESCARGAR
+    ================================================= */
+
+    doc.save(
+        nombrePDF
+    );
+}
+
+
+/* =========================================================
+   BOTÓN PDF
+========================================================= */
+
+document
+    .getElementById("btnPDF")
+    .addEventListener(
+        "click",
+        async function () {
+
+            const boton = this;
+
+            boton.disabled = true;
+
+            const textoOriginal =
+                boton.textContent;
+
+            boton.textContent =
+                "Generando PDF...";
+
+            try {
+
+                await generarPDF();
+
+            } catch (error) {
+
+                console.error(
+                    "Error generando PDF:",
+                    error
+                );
+
+                alert(
+                    "Ocurrió un error al generar el PDF.\n\n" +
+                    error.message
+                );
+
+            } finally {
+
+                boton.disabled = false;
+
+                boton.textContent =
+                    textoOriginal;
+            }
+        }
+    );
+
+
+/* =========================================================
+   BOTÓN LIMPIAR
+========================================================= */
+
+document
+    .getElementById("btnLimpiar")
+    .addEventListener(
+        "click",
+        function () {
+
+            const confirmar =
+                confirm(
+                    "¿Seguro que deseas vaciar todos los campos?"
+                );
+
+            if (!confirmar) {
+                return;
+            }
+
+            document
+                .getElementById(
+                    "formularioEntrevista"
+                )
+                .reset();
+
+            fotoDataURL = null;
+
+            vistaPreviaFoto
+                .classList
+                .add("hidden");
+
+            textoFoto
+                .classList
+                .remove("hidden");
+        }
+    );
+
+</script>
+
+</body>
+</html>
